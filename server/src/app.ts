@@ -2,12 +2,14 @@
 
 
 import express from 'express';
-import { runNetworkScan } from './controllers/ScanController';  // Ensure this import is correct
+import { runNetworkScan } from './controllers/ScanController';
 
 const app = express();
-app.use(express.json());  // Ensure the server can parse JSON
 
-// Define the POST route
-app.post('/api/scan/network', runNetworkScan);  // POST route to handle network scan
+// Middleware to parse JSON
+app.use(express.json());
+
+// Define the route for network scanning
+app.post('/api/scan/network', runNetworkScan);
 
 export default app;

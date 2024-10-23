@@ -1,23 +1,21 @@
 # Uses the nmap library to scan a given IP address for open ports
 
 import nmap
+import json
 
 def scan_network(ip: str):
     nm = nmap.PortScanner()
-    nm.scan(ip, '1-65535')  # Scan a broader range of ports for debugging
+    nm.scan(ip, '1-65535')  # Scan all available ports
 
     # Check if the scan results contain the provided IP
     if ip in nm.all_hosts():
-        print(f"Scan result: {nm[ip]}")
-        if 'tcp' in nm[ip]:
-            return nm[ip]['tcp']  # Return TCP scan results if available
-        else:
-            return f"No TCP ports found for {ip}"
+        tcp_ports = nm[ip].get('tcp', {})
+        return json.dumps(tcp_ports)  # Return TCP ports as a JSON string
     else:
-        return f"IP {ip} not found in scan results"
+        return json.dumps({"error": f"IP {ip} not found in scan results"})
 
 if __name__ == '__main__':
     import sys
     ip_address = sys.argv[1]
     result = scan_network(ip_address)
-    print(result)
+    print(result)  # Ensure that the result is printed as a JSON string
